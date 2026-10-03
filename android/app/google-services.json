@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "131897003172",
+    "firebase_url": "https://flutter-hiraya-aklatan-default-rtdb.firebaseio.com",
+    "project_id": "flutter-hiraya-aklatan",
+    "storage_bucket": "flutter-hiraya-aklatan.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131897003172:android:5e96363ce6a1188e052a31",
+        "android_client_info": {
+          "package_name": "com.yourname.hiraya_aklatan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131897003172-u76ino7pfkvec75bn9ch41kgle4137qt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yourname.hiraya_aklatan",
+            "certificate_hash": "16a3a732f2c83ad4f51ffcb54583197ce77b05ae"
+          }
+        },
+        {
+          "client_id": "131897003172-d7fil2d40dj0eso69ltessugoate651n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWdpXeN8E6A7KRSAlrCVmFCRP4RmatrP8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131897003172-d7fil2d40dj0eso69ltessugoate651n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "131897003172-d1d97469ko3ai556glunoc8loksfrv8a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterHirayaAklatan"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
