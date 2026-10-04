@@ -45,6 +45,29 @@ class ChapterRepository {
     }
   }
 
+  /// Watches the ordered chapter list for a book.
+  Stream<List<ChapterModel>> watchChapters(
+    String bookId, {
+    int limit = AppConstants.chaptersPerPage,
+  }) {
+    Query query = _firestoreService.chapters(bookId).orderBy('number');
+    if (limit > 0) {
+      query = query.limit(limit);
+    }
+
+    return query.snapshots().map(
+      (snapshot) => snapshot.docs
+          .map(
+            (doc) => ChapterModel.fromMap(
+              doc.data() as Map<String, dynamic>,
+              doc.id,
+              bookId,
+            ),
+          )
+          .toList(),
+    );
+  }
+
   /// Gets a specific chapter
   Future<ChapterModel?> getChapter(String bookId, String chapterId) async {
     try {

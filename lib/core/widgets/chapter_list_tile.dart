@@ -11,11 +11,7 @@ import '../utils/formatters.dart';
 /// Shows chapter number, title, release date, and a status indicator
 /// (Free, Early Access with price, or Locked).
 class ChapterListTile extends StatelessWidget {
-  const ChapterListTile({
-    super.key,
-    required this.chapter,
-    this.onTap,
-  });
+  const ChapterListTile({super.key, required this.chapter, this.onTap});
 
   final ChapterModel chapter;
   final VoidCallback? onTap;
@@ -46,9 +42,9 @@ class ChapterListTile extends StatelessWidget {
                   child: Text(
                     '${chapter.number}',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: _getStatusColor(),
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: _getStatusColor(),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -76,9 +72,7 @@ class ChapterListTile extends StatelessWidget {
                         const SizedBox(width: AppSpacing.xs),
                         Text(
                           _getStatusLabel(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
+                          style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
                                 color: _getStatusColor(),
                                 fontWeight: FontWeight.w600,
@@ -96,10 +90,7 @@ class ChapterListTile extends StatelessWidget {
               ),
 
               // Trailing icon
-              Icon(
-                _getTrailingIcon(),
-                color: AppColors.textSecondary,
-              ),
+              Icon(_getTrailingIcon(), color: AppColors.textSecondary),
             ],
           ),
         ),
@@ -127,7 +118,12 @@ class ChapterListTile extends StatelessWidget {
   String _getStatusLabel() {
     if (chapter.isFree) return 'Free';
     if (chapter.isEarlyAccess) {
-      return '${AppConstants.chapterTypeText == chapter.type ? "Early Access" : "Comic"} - ${Formatters.currency(chapter.price)}';
+      final contentType = switch (chapter.type) {
+        AppConstants.chapterTypeText => 'Text',
+        AppConstants.chapterTypeMixed => 'Text & Image',
+        _ => 'Comic',
+      };
+      return '$contentType - ${Formatters.currency(chapter.price)}';
     }
     return 'Locked';
   }

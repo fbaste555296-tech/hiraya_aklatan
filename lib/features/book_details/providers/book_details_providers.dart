@@ -5,8 +5,10 @@ import '../../../data/models/chapter_model.dart';
 import '../../../data/providers/service_providers.dart';
 
 /// Provider for a single book's details.
-final bookDetailsProvider =
-    FutureProvider.family<BookModel?, String>((ref, bookId) async {
+final bookDetailsProvider = FutureProvider.family<BookModel?, String>((
+  ref,
+  bookId,
+) async {
   final repository = ref.watch(bookRepositoryProvider);
   final book = await repository.getBookById(bookId);
 
@@ -21,18 +23,22 @@ final bookDetailsProvider =
 
 /// Provider for the signed-in user's rating for a book.
 final userBookRatingProvider =
-    FutureProvider.family<int?, ({String bookId, String userId})>(
-        (ref, params) async {
-  final repository = ref.watch(bookRepositoryProvider);
-  return repository.getUserRating(
-    bookId: params.bookId,
-    userId: params.userId,
-  );
-});
+    FutureProvider.family<int?, ({String bookId, String userId})>((
+      ref,
+      params,
+    ) async {
+      final repository = ref.watch(bookRepositoryProvider);
+      return repository.getUserRating(
+        bookId: params.bookId,
+        userId: params.userId,
+      );
+    });
 
 /// Provider for the chapter list of a book.
-final chaptersProvider =
-    FutureProvider.family<List<ChapterModel>, String>((ref, bookId) async {
+final chaptersProvider = StreamProvider.family<List<ChapterModel>, String>((
+  ref,
+  bookId,
+) {
   final repository = ref.watch(chapterRepositoryProvider);
-  return repository.getChapters(bookId);
+  return repository.watchChapters(bookId);
 });

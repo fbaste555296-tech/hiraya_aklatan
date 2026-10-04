@@ -7,6 +7,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/loading_view.dart';
+import '../../../../data/models/chapter_content_model.dart';
 import '../../../auth/providers/auth_providers.dart';
 import '../../providers/reader_providers.dart';
 import 'locked_chapter_screen.dart';
@@ -184,14 +185,26 @@ class _ReaderContent extends ConsumerWidget {
             onChapterChange();
           });
 
-          if (content.isText) {
+          if (content.hasContentBlocks) {
+            return _MixedContentReader(
+              blocks: content.contentBlocks,
+              fontSize: fontSize,
+              scrollController: scrollController,
+            );
+          } else if (content.isText && !content.isComic) {
             return _TextReader(
               content: content.textContent!,
               fontSize: fontSize,
               scrollController: scrollController,
             );
-          } else if (content.isComic) {
+          } else if (content.isComic && !content.isText) {
             return _ComicReader(pageUrls: content.pageUrls!);
+          } else if (content.isText || content.isComic) {
+            return _MixedContentReader(
+              blocks: content.orderedContent,
+              fontSize: fontSize,
+              scrollController: scrollController,
+            );
           }
 
           return const ErrorView(message: 'Unsupported chapter type.');
@@ -206,6 +219,58 @@ class _ReaderContent extends ConsumerWidget {
       return message.substring(message.indexOf('Exception:') + 11).trim();
     }
     return AppConstants.errorGeneric;
+  }
+}
+
+/// A scrollable reader for chapters with text and images in reading order.
+class _MixedContentReader extends StatelessWidget {
+  const _MixedContentReader({
+    required this.blocks,
+    required this.fontSize,
+    required this.scrollController,
+  });
+
+  final List<ChapterContentBlock> blocks;
+  final double fontSize;
+  final ScrollController scrollController;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: scrollController,
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final block in blocks)
+            if (block.type == 'text' && (block.text?.isNotEmpty ?? false))
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                child: Text(
+                  block.text!,
+                  style: AppTextStyles.readingBody.copyWith(fontSize: fontSize),
+                ),
+              )
+            else if (block.type == 'image' && block.imageUrl != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                child: CachedNetworkImage(
+                  imageUrl: block.imageUrl!,
+                  fit: BoxFit.contain,
+                  placeholder: (context, url) => const SizedBox(
+                    height: 220,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) =>
+                      const SizedBox(
+                        height: 220,
+                        child: Center(child: Icon(Icons.error_outline)),
+                      ),
+                ),
+              ),
+        ],
+      ),
+    );
   }
 }
 

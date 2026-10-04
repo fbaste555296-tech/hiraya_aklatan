@@ -108,10 +108,23 @@ final readerContentProvider =
       // Optimize comic page URLs for faster loading.
       if (content.isComic) {
         final cloudinary = ref.read(cloudinaryServiceProvider);
-        final optimizedUrls = content.pageUrls!
-            .map((url) => cloudinary.getOptimizedUrl(url, width: 1200))
-            .toList();
-        return content.copyWith(pageUrls: optimizedUrls);
+        return content.copyWith(
+          pageUrls: content.pageUrls
+              ?.map((url) => cloudinary.getOptimizedUrl(url, width: 1200))
+              .toList(),
+          contentBlocks: content.contentBlocks
+              .map(
+                (block) => block.type == 'image' && block.imageUrl != null
+                    ? ChapterContentBlock.image(
+                        cloudinary.getOptimizedUrl(
+                          block.imageUrl!,
+                          width: 1200,
+                        ),
+                      )
+                    : block,
+              )
+              .toList(),
+        );
       }
 
       return content;

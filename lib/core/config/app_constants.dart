@@ -33,6 +33,7 @@ class AppConstants {
   // Chapter types
   static const String chapterTypeText = 'text';
   static const String chapterTypeComic = 'comic';
+  static const String chapterTypeMixed = 'mixed';
 
   // Payment types
   static const String paymentTypeChapter = 'chapter';
